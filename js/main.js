@@ -34,6 +34,7 @@
 
         evalScript(`getLayers()`)
             .then(function(res) {
+                console.log(res)
                 var json = JSON.parse("[" + res + "]");
                 console.log(json)
                 // return evalScript(`selectFiles()`)
@@ -51,7 +52,7 @@
         // });
 
         document.getElementById("input_file").addEventListener('click', function () {
-            evalScript(`selectFiles("${text}")`)
+            evalScript(`selectFiles()`)
                 .then(function(res) {
                     text.innerHTML = res
                     inputFolder = res
@@ -75,13 +76,15 @@
         });
 
         document.getElementById("run").addEventListener('click', function () {
-            evalScript(`run()`)
+            if(inputFolder == undefined && outputFolder == undefined) {
+                alert('No input or output specified')
+            } else {
+                evalScript(`run("${layerDropdown.options[layerDropdown.selectedIndex].value}","${inputFolder}","${outputFolder}")`)
                 .then(function(res) {
                     // return evalScript(`selectFiles()`)
+                    // console.log(res)
                 });
-                // .then(function(res)) {
-
-                // }
+            }
         });
 
       
