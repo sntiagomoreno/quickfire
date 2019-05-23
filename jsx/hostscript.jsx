@@ -2,8 +2,28 @@
 /*global $, Folder*/
 
 var files
-var doc = activeDocument;
-var allLayers = [];
+
+function getLayers() {
+    var doc = activeDocument;
+    var allLayers = [];
+    var allLayers = collectAllLayers(doc, allLayers);
+    var res;
+
+    function collectAllLayers (doc, allLayers){
+        for (var m = 0; m < doc.layers.length; m++){
+            var theLayer = doc.layers[m];
+            if (theLayer.typename === "ArtLayer"){
+                allLayers.push('"'+theLayer.name+'"');
+            }else{
+                collectAllLayers(theLayer.name, allLayers);
+            }
+        }
+        alert(allLayers);
+        res = allLayers;
+    }
+    
+    return res
+}
 
 function selectFiles(){
     alert(activeDocument.path)
@@ -48,27 +68,6 @@ function run(){
     }
 }
 
-function getLayers(){
-    collectAllLayers(doc, allLayers);
-    // return 'hello'
-    // collectAllLayers(theParent, level, allLayers)
-}
-
-function collectAllLayers(parent, allLayers) {
-    for (var m = 0; m < parent.layers.length; m++)
-    {
-        var currentLayer = parent.layers[m];
-        if (currentLayer.typename === "ArtLayer")
-        {
-            allLayers.push(currentLayer);
-        }
-        else {
-            collectAllLayers(currentLayer, allLayers);
-        }
-        alert(allLayers)
-    }
-    return allLayers;
-}
 
 function getFiles(input) {
     if (input.name.match(/\.(psd|tif|jpg|png|psb)$/i) != null || input.constructor.name == "Folder") {

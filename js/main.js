@@ -10,26 +10,40 @@
         });
     }
 
+    
+    var csInterface = new CSInterface();
+
     function loadJSX(fileName) {
         var extensionRoot = csInterface.getSystemPath(SystemPath.EXTENSION) + "/jsx/";
         csInterface.evalScript('$.evalFile("' + extensionRoot + fileName + '")');
     }
 
-    var csInterface = new CSInterface();
+   
+
     
     function init() {
                 
         initColors();
+        loadJSX('json.js')
 
         var text = document.getElementById('input_name')
         var outputText = document.getElementById('output_name')
         var inputFolder = undefined
         var outputFolder = undefined
+        var layerDropdown = document.getElementById("select_layer")
 
         evalScript(`getLayers()`)
             .then(function(res) {
-                console.log(res)
+                var json = JSON.parse("[" + res + "]");
+                console.log(json)
                 // return evalScript(`selectFiles()`)
+                for (let i = 0; i < json.length; i++) {
+                    const element = json[i];
+                    var el = document.createElement("option")
+                    el.textContent = element;
+                    el.value = element;
+                    layerDropdown.appendChild(el)
+                }
             });
                 
         // document.getElementById("btn_test").addEventListener('click', function () {
@@ -69,6 +83,9 @@
 
                 // }
         });
+
+      
+
     }
         
     init();
