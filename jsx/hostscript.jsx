@@ -11,6 +11,15 @@ jpgSaveOptions.matte = MatteType.NONE;
 jpgSaveOptions.quality = 8; 
 jpgSaveOptions.artboardRange = '1'; 
 
+var pngOptions = new PNGSaveOptions();  
+pngOptions.compression = 9;  
+pngOptions.interlaced = false;
+
+var png8Options = new ExportOptionsSaveForWeb();
+png8Options.format = SaveDocumentType.PNG;
+png8Options.PNG8 = true;
+png8Options.quality = 100;
+
 function getLayers() {
     var doc = activeDocument;
     var allLayers = [];
@@ -39,7 +48,7 @@ function getLayers() {
 }
 
 function selectFiles(){
-    var input = Folder.selectDialog("Select Folder")
+    var input = File.openDialog("Select Files", "*.*",true)
     files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|psb|)$/i)
     if (input != null) {
         var inputData = {
@@ -70,15 +79,15 @@ function output(){
     }
 }
 
-function run(value, source, target){
+function run(value, source, target, format){
     var doc = activeDocument;
 
     alert(value)
     if(value == "selected"){
-        returnLayer(activeDocument.activeLayer, source, target)
+        returnLayer(activeDocument.activeLayer, source, target, format)
     } else {
         alert('finding')
-        findLayer(doc, value, source, target)
+        findLayer(doc, value, source, target, format)
         
     }
     // for (var i = 0; i < files.length; i++) {
@@ -123,18 +132,25 @@ function findLayer(parent, value, source, target) {
 }
 
 
-function returnLayer(parent, source, target) {
+function returnLayer(parent, source, target, format) {
     if(parent.kind == "LayerKind.SMARTOBJECT") {
         var input = new Folder(source)
         var files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|)$/i)
         // var subFolder = new Folder(activeDocument.path + '/Edited/')
         // if (!subFolder.exists){subFolder.create()};
+        alert(format)
 
         for (var i = 0; i < files.length; i++) {
             var selected = files[i];
             parent = replaceContents(selected, parent)
-            // Save JPG
-            activeDocument.saveAs((new File(target + '/' +selected.name + ".jpg")), jpgSaveOptions, true,Extension.LOWERCASE);
+            if(format == "jpg") {
+                // Save JPG
+                activeDocument.saveAs((new File(target + '/' +selected.name + ".jpg")), jpgSaveOptions, true,Extension.LOWERCASE);
+            } else  if (format == "png8") {
+                activeDocument.exportDocument((new File(target + '/' +selected.name + ".png")), ExportType.SAVEFORWEB, png8Options);
+            } else if (format == "png24") {
+                activeDocument.saveAs((new File(target + '/' +selected.name + ".png")), pngOptions, true,Extension.LOWERCASE);
+            }
             
         }
     } else {

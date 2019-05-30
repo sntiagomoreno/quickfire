@@ -31,6 +31,7 @@
         var inputFolder = undefined
         var outputFolder = undefined
         var layerDropdown = document.getElementById("select_layer")
+        var formatDropdown = document.getElementById("format")
 
         evalScript(`getLayers()`)
             .then(function(res) {
@@ -79,15 +80,13 @@
             if(inputFolder == undefined && outputFolder == undefined) {
                 alert('No input or output specified')
             } else {
-                evalScript(`run("${layerDropdown.options[layerDropdown.selectedIndex].value}","${inputFolder}","${outputFolder}")`)
+                evalScript(`run("${layerDropdown.options[layerDropdown.selectedIndex].value}","${inputFolder}","${outputFolder}","${formatDropdown.options[formatDropdown.selectedIndex].value}")`)
                 .then(function(res) {
                     // return evalScript(`selectFiles()`)
                     // console.log(res)
                 });
             }
         });
-
-      
 
     }
         
