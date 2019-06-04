@@ -40,7 +40,7 @@ function getLayers() {
                 collectAllLayers(theLayer, allLayers);
             }
         }
-        alert(allLayers);
+        // alert(allLayers);
         res = allLayers;
     }
     
@@ -49,17 +49,18 @@ function getLayers() {
 
 function selectFiles(){
     var input = File.openDialog("Select Files", "*.*",true)
-    files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|psb|)$/i)
-    if (input != null) {
-        var inputData = {
-            name: input.name,
-            path: input.path,
-            fullName: input.fullName,
-            fsName: input.fsName,
-            relativeURI: input.relativeURI,
-            absoluteURI: input.absoluteURI
+    // files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|psb|)$/i)
+    files = input
+    
+    if (input != undefined) {
+        // for (var i = 0; i < input.length; i++) {
+        //     alert(input[i])
+        // }
+        if (input.length > 1) {
+            return '[Multiple files selected]'
+        } else {
+            return input[0]
         }
-        return inputData.absoluteURI
     }
 }
 
@@ -82,11 +83,11 @@ function output(){
 function run(value, source, target, format){
     var doc = activeDocument;
 
-    alert(value)
+    // alert(value)
     if(value == "selected"){
         returnLayer(activeDocument.activeLayer, source, target, format)
     } else {
-        alert('finding')
+        // alert('finding')
         findLayer(doc, value, source, target, format)
         
     }
@@ -112,7 +113,7 @@ function findLayer(parent, value, source, target) {
 		var layer = layers[i];
 		if (layer.name.toLowerCase() == value.toLowerCase()) {
 			// select matching layer
-            alert('finding layer')
+            // alert('finding layer')
 			activeDocument.activeLayer = layer;
 			match = true;
 			break;
@@ -125,7 +126,7 @@ function findLayer(parent, value, source, target) {
 			}
 		}
 	}
-    alert(match)
+    // alert(match)
 	if (match) {
         returnLayer(activeDocument.activeLayer, source, target)
     }
@@ -138,7 +139,7 @@ function returnLayer(parent, source, target, format) {
         var files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|)$/i)
         // var subFolder = new Folder(activeDocument.path + '/Edited/')
         // if (!subFolder.exists){subFolder.create()};
-        alert(format)
+        // alert(format)
 
         for (var i = 0; i < files.length; i++) {
             var selected = files[i];
@@ -154,7 +155,7 @@ function returnLayer(parent, source, target, format) {
             
         }
     } else {
-        alert("no smart object")
+        alert("Selected layer is not a Smart Object")
     }
 }
 
@@ -175,4 +176,9 @@ function getFiles(input) {
     if (input.name.match(/\.(psd|tif|jpg|png|psb)$/i) != null || input.constructor.name == "Folder") {
         return true
     };
+}
+
+function openOutput(folder) {
+    var openFolder = Folder(folder)
+    openFolder.execute()
 }

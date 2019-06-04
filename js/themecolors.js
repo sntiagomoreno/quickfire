@@ -56,12 +56,12 @@ function grayToHex( gray )
 // hand-lifted off of the PS UI, because the CEP host environment doesn't
 // provide anything except for the background color.
 var colorTable = {
-    '#32':{ textfg:0xCE, textbg:0x22, cssfile:'darker' },
-    '#34':{ textfg:0xCE, textbg:0x22, cssfile:'darker' }, // CC 2014
+    '#32':{ textfg:0xCE, textbg:0x22, cssfile:'darkest' },
+    '#34':{ textfg:0xCE, textbg:0x22, cssfile:'darkest' }, // CC 2014
     '#53':{ textfg:0xE1, textbg:0x3A, cssfile:'dark' },
     '#B8':{ textfg:0x18, textbg:0xEE, cssfile:'light' },
-    '#D6':{ textfg:0x21, textbg:0xFF, cssfile:'lighter' }, // CC 2014
-    '#F0':{ textfg:0x21, textbg:0xFF, cssfile:'lighter' } };
+    '#D6':{ textfg:0x21, textbg:0xFF, cssfile:'lightest' }, // CC 2014
+    '#F0':{ textfg:0x21, textbg:0xFF, cssfile:'lightest' } };
 
 
 // This swaps the light/dark stylesheets for the control widgets
@@ -75,8 +75,10 @@ function swapCSS( cssfilename )
     if ($("#ccstyleTheme").length)
         $("#ccstyleTheme").remove();
     var link = document.createElement('link');
-    $("head").append('<link id="ccstyleTheme" href="css/styles-'
+    $("head").append('<link id="ccstyleTheme" href="css/spectrum-'
                      + cssfilename +'.css" rel="stylesheet" type="text/css" />');
+
+    $("body").addClass('spectrum--'+ cssfilename)
 }
 
 // Called by the theme color changed event.
@@ -130,3 +132,5 @@ $("#reload").click( function() { window.location.reload(true); } );
 $("#sources").click( function() { csInterface.openURLInDefaultBrowser(""); } );
 // This assumes CHROME is your default browser!
 $("#debug").click( function() { if (debugPort) csInterface.openURLInDefaultBrowser("http://localhost:"+debugPort); } );
+
+

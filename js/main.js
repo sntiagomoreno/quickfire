@@ -6,24 +6,24 @@
 
     function evalScript(command) {
         return new Promise(function(resolve, reject) {
-            csInterface.evalScript(command, resolve);
+            cs.evalScript(command, resolve);
         });
     }
 
     
-    var csInterface = new CSInterface();
+    var cs = new CSInterface();
 
     function loadJSX(fileName) {
-        var extensionRoot = csInterface.getSystemPath(SystemPath.EXTENSION) + "/jsx/";
-        csInterface.evalScript('$.evalFile("' + extensionRoot + fileName + '")');
+        var extensionRoot = cs.getSystemPath(SystemPath.EXTENSION) + "/jsx/";
+        cs.evalScript('$.evalFile("' + extensionRoot + fileName + '")');
     }
 
-   
-
+    document.querySelector('#reload').addEventListener('click', function() { window.location.reload(true)})
+    document.querySelector("#sources").addEventListener('click', function() { cs.openURLInDefaultBrowser(""); } );
+    document.querySelector("#debug").addEventListener('click', function() { cs.openURLInDefaultBrowser("http://localhost:8088"); } );
     
     function init() {
                 
-        initColors();
         loadJSX('json.js')
 
         var text = document.getElementById('input_name')
@@ -32,6 +32,9 @@
         var outputFolder = undefined
         var layerDropdown = document.getElementById("select_layer")
         var formatDropdown = document.getElementById("format")
+        var openOutput = document.getElementById("open")
+        var runBtn = document.getElementById("run")
+        var outputBtn = document.getElementById("output_file")
 
         evalScript(`getLayers()`)
             .then(function(res) {
@@ -55,25 +58,24 @@
         document.getElementById("input_file").addEventListener('click', function () {
             evalScript(`selectFiles()`)
                 .then(function(res) {
-                    text.innerHTML = res
-                    inputFolder = res
-                    // return evalScript(`selectFiles()`)
-                });
-                // .then(function(res)) {
-
-                // }
+                    if(res != "undefined") {
+                        text.children[0].innerHTML = res
+                        inputFolder = res
+                        outputBtn.disabled = false
+                    }
+                })
         });
 
         document.getElementById("output_file").addEventListener('click', function () {
             evalScript(`output()`)
                 .then(function(res) {
-                    outputText.innerHTML = res
-                    outputFolder = res
-                    // return evalScript(`selectFiles()`)
-                });
-                // .then(function(res)) {
-
-                // }
+                    if(res != "undefined") {
+                        outputText.children[0].innerHTML = res
+                        outputFolder = res
+                        openOutput.disabled = false
+                        runBtn.disabled = false
+                    }
+                })
         });
 
         document.getElementById("run").addEventListener('click', function () {
@@ -87,6 +89,21 @@
                 });
             }
         });
+
+        openOutput.addEventListener('click', function() {
+            if(!openOutput.disabled) {
+                evalScript(`openOutput("${outputFolder}")`)
+            }
+        })
+
+        cs.addEventListener(CSInterface.THEME_COLOR_CHANGED_EVENT, setBgColor);
+
+        function setBgColor() {
+            var appColor = cs.getHostEnvironment().appSkinInfo.panelBackgroundColor.color;
+            document.body.style.backgroundColor = 'rgb('+ Math.floor(appColor.red) + ', ' + Math.floor(appColor.green) + ', ' + Math.floor(appColor.blue) + ')';
+        }
+
+        setBgColor();
 
     }
         
