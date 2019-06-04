@@ -85,7 +85,7 @@ function run(value, source, target, format){
 
     // alert(value)
     if(value == "selected"){
-        returnLayer(activeDocument.activeLayer, source, target, format)
+        returnLayer(activeDocument.activeLayer, files, target, format)
     } else {
         // alert('finding')
         findLayer(doc, value, source, target, format)
@@ -135,24 +135,28 @@ function findLayer(parent, value, source, target) {
 
 function returnLayer(parent, source, target, format) {
     if(parent.kind == "LayerKind.SMARTOBJECT") {
-        var input = new Folder(source)
-        var files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|)$/i)
+        // var input = new Folder(source)
+        // var files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|)$/i)
         // var subFolder = new Folder(activeDocument.path + '/Edited/')
         // if (!subFolder.exists){subFolder.create()};
         // alert(format)
+        alert(source.length)
 
-        for (var i = 0; i < files.length; i++) {
-            var selected = files[i];
-            parent = replaceContents(selected, parent)
-            if(format == "jpg") {
-                // Save JPG
-                activeDocument.saveAs((new File(target + '/' +selected.name + ".jpg")), jpgSaveOptions, true,Extension.LOWERCASE);
-            } else  if (format == "png8") {
-                activeDocument.exportDocument((new File(target + '/' +selected.name + ".png")), ExportType.SAVEFORWEB, png8Options);
-            } else if (format == "png24") {
-                activeDocument.saveAs((new File(target + '/' +selected.name + ".png")), pngOptions, true,Extension.LOWERCASE);
+        if (source.length > 1) {
+            for (var i = 0; i < source.length; i++) {
+                var selected = source[i];
+                parent = replaceContents(selected, parent)
+                if(format == "jpg") {
+                    // Save JPG
+                    activeDocument.saveAs((new File(target + '/' +selected.name + ".jpg")), jpgSaveOptions, true,Extension.LOWERCASE);
+                } else  if (format == "png8") {
+                    activeDocument.exportDocument((new File(target + '/' +selected.name + ".png")), ExportType.SAVEFORWEB, png8Options);
+                } else if (format == "png24") {
+                    activeDocument.saveAs((new File(target + '/' +selected.name + ".png")), pngOptions, true,Extension.LOWERCASE);
+                } 
             }
-            
+        } else {
+            alert(source.length)
         }
     } else {
         alert("Selected layer is not a Smart Object")
