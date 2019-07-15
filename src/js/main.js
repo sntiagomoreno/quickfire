@@ -30,13 +30,13 @@
         cs.evalScript('$.evalFile("' + extensionRoot + fileName + '")');
     }
 
-    document.querySelector('#reload').addEventListener('click', function() { window.location.reload(true)})
-    document.querySelector("#sources").addEventListener('click', function() { cs.openURLInDefaultBrowser(""); } );
-    document.querySelector("#debug").addEventListener('click', function() { cs.openURLInDefaultBrowser("http://localhost:8088"); } );
+    // document.querySelector('#reload').addEventListener('click', function() { window.location.reload(true)})
+    // document.querySelector("#sources").addEventListener('click', function() { cs.openURLInDefaultBrowser(""); } );
+    // document.querySelector("#debug").addEventListener('click', function() { cs.openURLInDefaultBrowser("http://localhost:8088"); } );
     
     function init() {
 
-        Persistent(false)
+        Persistent(true)
                 
         loadJSX('json.js')
 

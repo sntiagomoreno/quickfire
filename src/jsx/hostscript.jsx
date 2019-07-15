@@ -30,7 +30,6 @@ function getLayers() {
         
         for (var m = 0; m < doc.layers.length; m++){
             var theLayer = doc.layers[m];
-            // alert(theLayer.kind + 'and ' + theLayer.typename +  'is ' + theLayer.name)
             if (theLayer.typename === "ArtLayer"){
                 if(theLayer.kind == "LayerKind.SMARTOBJECT") {
                     allLayers.push('"'+theLayer.name+'"');
@@ -113,7 +112,6 @@ function findLayer(parent, value, source, target, format) {
 		}
 	}
 	if (match) {
-        alert('matched')
         returnLayer(activeDocument.activeLayer, source, target, format)
     }
 }
