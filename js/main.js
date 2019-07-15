@@ -12,6 +12,18 @@
 
     
     var cs = new CSInterface();
+    var gExtensionId = "com.santiagomoreno.quickfire";
+
+    function Persistent(inOn) {
+
+        if (inOn) {
+            var event = new CSEvent("com.adobe.PhotoshopPersistent", "APPLICATION");
+        } else {
+            var event = new CSEvent("com.adobe.PhotoshopUnPersistent", "APPLICATION");
+        }
+        event.extensionId = gExtensionId;
+        cs.dispatchEvent(event);
+    }
 
     function loadJSX(fileName) {
         var extensionRoot = cs.getSystemPath(SystemPath.EXTENSION) + "/jsx/";
@@ -23,6 +35,8 @@
     document.querySelector("#debug").addEventListener('click', function() { cs.openURLInDefaultBrowser("http://localhost:8088"); } );
     
     function init() {
+
+        Persistent(false)
                 
         loadJSX('json.js')
 
@@ -50,10 +64,6 @@
                     layerDropdown.appendChild(el)
                 }
             });
-                
-        // document.getElementById("btn_test").addEventListener('click', function () {
-        //     csInterface.evalScript('sayHello()');
-        // });
 
         document.getElementById("input_file").addEventListener('click', function () {
             evalScript(`selectFiles()`)
@@ -83,10 +93,6 @@
                 alert('No input or output specified')
             } else {
                 evalScript(`run("${layerDropdown.options[layerDropdown.selectedIndex].value}","${inputFolder}","${outputFolder}","${formatDropdown.options[formatDropdown.selectedIndex].value}")`)
-                .then(function(res) {
-                    // return evalScript(`selectFiles()`)
-                    // console.log(res)
-                });
             }
         });
 

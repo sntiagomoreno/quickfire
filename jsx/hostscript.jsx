@@ -40,22 +40,22 @@ function getLayers() {
                 collectAllLayers(theLayer, allLayers);
             }
         }
-        // alert(allLayers);
         res = allLayers;
     }
-    
     return res
 }
 
+function filterFiles(file){
+    if (file.constructor.name == "Folder") { return true }
+    if(file.name.match(/\.(jpg|jpeg|png)$/)){return true}
+    return false
+}
+
 function selectFiles(){
-    var input = File.openDialog("Select Files", "*.*",true)
-    // files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|psb|)$/i)
+    var input = File.openDialog("Select Files",filterFiles,true)
+
     files = input
-    
     if (input != undefined) {
-        // for (var i = 0; i < input.length; i++) {
-        //     alert(input[i])
-        // }
         if (input.length > 1) {
             return '[Multiple files selected]'
         } else {
@@ -66,7 +66,7 @@ function selectFiles(){
 
 function output(){
     var input = Folder.selectDialog("Select Output Folder")
-    // var files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|)$/i)
+
     if (input != null) {
         var inputData = {
             name: input.name,
@@ -83,37 +83,23 @@ function output(){
 function run(value, source, target, format){
     var doc = activeDocument;
 
-    // alert(value)
     if(value == "selected"){
         returnLayer(activeDocument.activeLayer, files, target, format)
     } else {
-        // alert('finding')
-        findLayer(doc, value, source, target, format)
-        
+        findLayer(doc, value, files, target, format)   
     }
-    // for (var i = 0; i < files.length; i++) {
-    //     var selected = files[i];
-    //     parent = replaceContents(selected, parent)
-    //     // Save JPG
-    //     activeDocument.saveAs((new File(thePath + '/Edited/' + activeDocument.name + '_' +selected.name + ".jpg")), jpgSaveOptions, true,Extension.LOWERCASE);
-        
-    // }
 }
 
-function findLayer(parent, value, source, target) {
-   
+function findLayer(parent, value, source, target, format) {
     var layers = parent.layers;
 	var len = layers.length;
 	var match = false;
 
     // iterate through layers to find a match
 	for (var i = 0; i < len; i++) {
-         
 		// test for matching layer
 		var layer = layers[i];
 		if (layer.name.toLowerCase() == value.toLowerCase()) {
-			// select matching layer
-            // alert('finding layer')
 			activeDocument.activeLayer = layer;
 			match = true;
 			break;
@@ -126,46 +112,46 @@ function findLayer(parent, value, source, target) {
 			}
 		}
 	}
-    // alert(match)
 	if (match) {
-        returnLayer(activeDocument.activeLayer, source, target)
+        alert('matched')
+        returnLayer(activeDocument.activeLayer, source, target, format)
     }
 }
 
 
 function returnLayer(parent, source, target, format) {
     if(parent.kind == "LayerKind.SMARTOBJECT") {
-        // var input = new Folder(source)
-        // var files = input.getFiles(/\.(jpg|tif|psd|bmp|gif|png|)$/i)
-        // var subFolder = new Folder(activeDocument.path + '/Edited/')
-        // if (!subFolder.exists){subFolder.create()};
-        // alert(format)
-        alert(source.length)
-
-        if (source.length > 1) {
+        if (source.length > 1) {  
             for (var i = 0; i < source.length; i++) {
                 var selected = source[i];
-                parent = replaceContents(selected, parent)
-                if(format == "jpg") {
-                    // Save JPG
-                    activeDocument.saveAs((new File(target + '/' +selected.name + ".jpg")), jpgSaveOptions, true,Extension.LOWERCASE);
-                } else  if (format == "png8") {
-                    activeDocument.exportDocument((new File(target + '/' +selected.name + ".png")), ExportType.SAVEFORWEB, png8Options);
-                } else if (format == "png24") {
-                    activeDocument.saveAs((new File(target + '/' +selected.name + ".png")), pngOptions, true,Extension.LOWERCASE);
-                } 
+                saveImage(selected, format, target, parent)
             }
+            openOutput(target)
         } else {
-            alert(source.length)
+            var selected = source[0];
+            saveImage(selected, format, target, parent)
+            openOutput(target)
         }
     } else {
         alert("Selected layer is not a Smart Object")
     }
 }
 
+function saveImage(selected, format, target, parent) {
+    var filename = selected.name.split('.').slice(0, -1).join('.')
+
+    parent = replaceContents(selected, parent)
+    if(format == "jpg") {
+        activeDocument.saveAs((new File(target + '/' + filename + ".jpg")), jpgSaveOptions, true,Extension.LOWERCASE);
+    } else  if (format == "png8") {
+        activeDocument.exportDocument((new File(target + '/' + filename + ".png")), ExportType.SAVEFORWEB, png8Options);
+    } else if (format == "png24") {
+        activeDocument.saveAs((new File(target + '/' + filename + ".png")), pngOptions, true,Extension.LOWERCASE);
+    } 
+}
+
 function replaceContents(newFile, theSO) {
     activeDocument.activeLayer = theSO;
-    // =======================================================
     var idplacedLayerReplaceContents = stringIDToTypeID("placedLayerReplaceContents");
     var desc3 = new ActionDescriptor();
     var idnull = charIDToTypeID("null");
