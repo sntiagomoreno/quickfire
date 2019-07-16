@@ -1,7 +1,10 @@
 # QuickFire
 🔥 Quickly replace Smart Objects and export immediately to JPG or PNG with a single click.
 
-![Demo](quickfire-demo.gif) 
+<p float="left" align="center" valign="top">
+<img src="quickfire-demo.gif" alt="Demo" width="560">
+<img src="https://i.imgur.com/9MBBBa5.png" alt="Panel" width="300" valign="top">
+</p>
 
 Tired of manually replacing and exporting localized screens into devices I built this at [Huge](https://hugeinc.com) to ease production work. Great for PSD mockups.
 
