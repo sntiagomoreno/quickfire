@@ -9,7 +9,7 @@
 Tired of manually replacing and exporting localized screens into devices I built this at [Huge](https://hugeinc.com) to ease production work. Great for PSD mockups.
 
 ## Download
-Get the latest release [here](https://github.com/sntiagomoreno/quickfire/releases).
+Get the latest release [here](https://github.com/sntiagomoreno/quickfire/releases). *The .zxp file under Assets.*
 
 ## Installation
 - Install with [ZXP Installer](https://zxpinstaller.com/)
