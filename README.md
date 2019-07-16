@@ -1,4 +1,4 @@
-# Quickfire 🔥
+# QuickFire 🔥
 Quickly replace Smart Objects and export immediately to JPG or PNG with a single click.
 
 ![Demo](quickfire-demo.gif) 
